@@ -1,0 +1,11 @@
+{
+	"sharding": {
+		"enabled": false,
+		"totalShards": 1,
+		"shardList": [0]
+	},
+	"colours": {
+		"success": "#5555FF",
+		"error": "#FF5555"
+	}
+}
