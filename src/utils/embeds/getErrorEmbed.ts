@@ -14,15 +14,15 @@ export = (
 	const embed = new EmbedBuilder()
 		.setAuthor({
 			name,
-			iconURL: interaction.guild!.members.me!.displayAvatarURL()
+			iconURL: interaction.client.user.displayAvatarURL()
 		})
 		.setDescription(message)
 		.setColor(colours.error as ColorResolvable)
 		.setTimestamp()
 		.setFooter({
 			// @ts-ignore
-			text: `${interaction.member!.displayName} • ${name}`,
-			iconURL: interaction.guild!.iconURL() as string
+			text: `${interaction.user!.displayName} • ${name}`,
+			iconURL: interaction.user!.displayAvatarURL() as string
 		});
 
 	return { embeds: [embed], ephemeral: true };

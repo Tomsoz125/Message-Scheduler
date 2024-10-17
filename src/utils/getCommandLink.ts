@@ -1,22 +1,6 @@
-import { Client, Guild } from "discord.js";
+import { Client } from "discord.js";
 
-export = async ({
-	client,
-	command,
-	guild,
-	guildId
-}: {
-	client: Client;
-	command: string;
-	guild?: Guild;
-	guildId?: string;
-}) => {
-	if (!guild && !guildId) return command;
-	if (!guild && guildId) {
-		guild = await client.guilds.fetch(guildId!);
-	}
-	if (!guild) return command;
-
+export = async ({ client, command }: { client: Client; command: string }) => {
 	const commandName =
 		command.split(" ").length > 0
 			? command.split(" ")[0].slice(1)
