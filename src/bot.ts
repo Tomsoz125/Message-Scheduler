@@ -3,7 +3,10 @@ import { config } from "../config";
 import eventHandler from "./handlers/eventHandler";
 
 const client = new Client({
-	intents: [IntentsBitField.Flags.Guilds],
+	intents: [
+		IntentsBitField.Flags.Guilds,
+		IntentsBitField.Flags.DirectMessages
+	],
 	partials: [Partials.Channel]
 });
 

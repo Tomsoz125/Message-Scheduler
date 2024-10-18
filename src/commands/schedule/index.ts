@@ -1,4 +1,8 @@
-import { ApplicationIntegrationType, SlashCommandBuilder } from "discord.js";
+import {
+	ApplicationIntegrationType,
+	ChannelType,
+	SlashCommandBuilder
+} from "discord.js";
 import { CommandObject } from "typings";
 
 export = {
@@ -12,14 +16,10 @@ export = {
 				.setDescription("Adds a scheduled message")
 				.addStringOption((o) =>
 					o
-						.setName("message")
-						.setDescription("The message to send!")
-						.setRequired(true)
-				)
-				.addIntegerOption((o) =>
-					o
 						.setName("time")
-						.setDescription("The timestamp to send the message at!")
+						.setDescription(
+							"The discord timestamp to send the message at!"
+						)
 						.setRequired(true)
 				)
 				.addChannelOption((o) =>
@@ -28,7 +28,11 @@ export = {
 						.setDescription(
 							"The channel to send it in, default is current channel!"
 						)
-						.setRequired(false)
+						.addChannelTypes(
+							ChannelType.GuildText,
+							ChannelType.GuildAnnouncement
+						)
+						.setRequired(true)
 				)
 		)
 		.addSubcommand((subcommand) =>
