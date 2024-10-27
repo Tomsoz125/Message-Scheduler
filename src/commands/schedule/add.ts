@@ -9,6 +9,7 @@ import {
 import { db } from "../../../db";
 import getErrorEmbed from "../../utils/embeds/getErrorEmbed";
 import getSuccessEmbed from "../../utils/embeds/getSuccessEmbed";
+import { addItem } from "../../utils/messages";
 let name = "Schedule Message";
 const regex = /[0-9]+/i;
 
@@ -20,7 +21,7 @@ export = {
 		subcommand: CommandInteractionOption<CacheType>
 	) => {
 		const user = interaction.user;
-		let timestamp = interaction.options.get("time", true).value as string;
+		let timestamp = interaction.options.get("time", true).value as number;
 		const channelId = interaction.options.get("channel", true)
 			.value! as string;
 		if (!channelId) {
@@ -29,33 +30,6 @@ export = {
 					interaction as Interaction,
 					name,
 					"Please specify a channel"
-				)
-			);
-		}
-
-		if (timestamp.startsWith("<")) {
-			const res = regex.exec(timestamp);
-			console.log(res);
-			if (!res || res.length < 1) {
-				return await interaction.editReply(
-					getErrorEmbed(
-						interaction as Interaction,
-						name,
-						"Invalid timestamp format! Please use https://discordtimestamps.com/"
-					)
-				);
-			}
-			timestamp = res[0];
-		}
-		console.log(timestamp);
-		try {
-			var intTimestamp = parseInt(timestamp);
-		} catch (e) {
-			return await interaction.editReply(
-				getErrorEmbed(
-					interaction as Interaction,
-					name,
-					"Invalid timestamp format! Please use https://discordtimestamps.com/"
 				)
 			);
 		}
@@ -112,12 +86,14 @@ export = {
 			var message = await db.scheduledMessage.create({
 				data: {
 					channelId: channelId,
-					time: new Date(intTimestamp),
+					time: new Date(timestamp * 1000),
 					userId: user.id,
 					message: msg.first()!.content,
 					guildId: interaction.guildId
 				}
 			});
+
+			addItem(message);
 		} catch (e) {
 			console.error(e);
 			return await user.send(

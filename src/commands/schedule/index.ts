@@ -14,20 +14,16 @@ export = {
 			subcommand
 				.setName("add")
 				.setDescription("Adds a scheduled message")
-				.addStringOption((o) =>
+				.addNumberOption((o) =>
 					o
 						.setName("time")
-						.setDescription(
-							"The discord timestamp to send the message at!"
-						)
+						.setDescription("The timestamp to send the message at!")
 						.setRequired(true)
 				)
 				.addChannelOption((o) =>
 					o
 						.setName("channel")
-						.setDescription(
-							"The channel to send it in, default is current channel!"
-						)
+						.setDescription("The channel to send it in")
 						.addChannelTypes(
 							ChannelType.GuildText,
 							ChannelType.GuildAnnouncement
@@ -39,7 +35,7 @@ export = {
 			subcommand
 				.setName("remove")
 				.setDescription("Removes a scheduled message")
-				.addIntegerOption((o) =>
+				.addNumberOption((o) =>
 					o
 						.setName("id")
 						.setDescription(

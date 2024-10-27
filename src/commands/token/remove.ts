@@ -67,7 +67,7 @@ export = {
 						client,
 						command: "/token add"
 					})) +
-					"!"
+					"! If you want to be extra secure, you should change your account password as this will regenerate your token!"
 			)
 		);
 	}
