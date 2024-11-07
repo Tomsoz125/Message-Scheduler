@@ -28,7 +28,7 @@ model ScheduledMessage {
 
     guildId String?
     channelId String
-    message String
+    message String @db.Text
 
     time DateTime
 }

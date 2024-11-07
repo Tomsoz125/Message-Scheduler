@@ -139,6 +139,7 @@ export = async (client: Client) => {
 				}
 				// TODO: Make channel groups, to allow people to schedule a message in multiple channels at the same time
 				// TODO: Make a command to send a message in a group immediately instead of setting a schedule
+				// TODO: Make a schedule list command
 			}
 		}
 	}, 1000);
