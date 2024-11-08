@@ -9,6 +9,7 @@ import {
 import { db } from "../../../db";
 import getErrorEmbed from "../../utils/embeds/getErrorEmbed";
 import getSuccessEmbed from "../../utils/embeds/getSuccessEmbed";
+import getCommandLink from "../../utils/getCommandLink";
 import { addItem } from "../../utils/messages";
 let name = "Schedule Message";
 const regex = /[0-9]+/i;
@@ -21,6 +22,18 @@ export = {
 		subcommand: CommandInteractionOption<CacheType>
 	) => {
 		const user = interaction.user;
+		const token = await db.userToken.findUnique({ where: { id: user.id } });
+		if (!token) {
+			return await interaction.editReply(
+				getErrorEmbed(
+					interaction as Interaction,
+					name,
+					`You don't have a token linked to your account! Run ${await getCommandLink(
+						{ client, command: "/token add" }
+					)} to link one!`
+				)
+			);
+		}
 		let timestamp = interaction.options.get("time", true).value as number;
 		const channelId = interaction.options.get("channel", true)
 			.value! as string;

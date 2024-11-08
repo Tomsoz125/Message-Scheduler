@@ -78,7 +78,7 @@ export = async (client: Client) => {
 					}
 					try {
 						await user.send(
-							`Failed to fetch user ${schedule.userId}'s token from the database, aborting message!`
+							`You don't have a token linked to the bot! Aborting message!`
 						);
 					} catch (e) {
 						return;
