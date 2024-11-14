@@ -20,7 +20,7 @@ export = async (client: Client) => {
 					removeItem(schedule);
 				} catch (e) {
 					console.log(
-						`Failed to delete scheduled message ${schedule.id} from the database, aborting message!`
+						`Failed to delete scheduled message ${schedule.id} from the database, aborting message! Error: ${e}`
 					);
 
 					const user = await client.users.fetch(schedule.userId);
@@ -45,7 +45,7 @@ export = async (client: Client) => {
 					});
 				} catch (e) {
 					console.log(
-						`Failed to fetch user ${schedule.userId}'s token from the database, aborting message!`
+						`Failed to fetch user ${schedule.userId}'s token from the database, aborting message! Error: ${e}`
 					);
 
 					const user = await client.users.fetch(schedule.userId);
