@@ -5,6 +5,8 @@ import getCommandLink from "../../utils/getCommandLink";
 import { removeItem, sync } from "../../utils/messages";
 import sendTokenMsg from "../../utils/sendTokenMsg";
 
+const processing: { [key: number]: boolean } = {};
+
 export = async (client: Client) => {
 	console.log(`${client.user?.username} is done loading and is now online!`);
 	await sync();
@@ -12,13 +14,16 @@ export = async (client: Client) => {
 	setInterval(async () => {
 		const allSchedules = await db.scheduledMessage.findMany();
 		for (const schedule of allSchedules) {
+			if (processing[schedule.id]) continue;
 			if (schedule.time <= new Date()) {
+				processing[schedule.id] = true;
 				try {
 					await db.scheduledMessage.delete({
 						where: { id: schedule.id }
 					});
 					removeItem(schedule);
 				} catch (e) {
+					processing[schedule.id] = false;
 					console.log(
 						`Failed to delete scheduled message ${schedule.id} from the database, aborting message! Error: ${e}`
 					);
@@ -28,6 +33,7 @@ export = async (client: Client) => {
 						console.log(
 							"Failed to fetch user " + schedule.userId + "!"
 						);
+						processing[schedule.id] = false;
 						return;
 					}
 					try {
@@ -35,8 +41,10 @@ export = async (client: Client) => {
 							`Failed to delete scheduled message ${schedule.id} from the database, aborting message!`
 						);
 					} catch (e) {
+						processing[schedule.id] = false;
 						return;
 					}
+					processing[schedule.id] = false;
 					return;
 				}
 				try {
@@ -53,6 +61,7 @@ export = async (client: Client) => {
 						console.log(
 							"Failed to fetch user " + schedule.userId + "!"
 						);
+						processing[schedule.id] = false;
 						return;
 					}
 					try {
@@ -60,8 +69,10 @@ export = async (client: Client) => {
 							`Failed to fetch user ${schedule.userId}'s token from the database, aborting message!`
 						);
 					} catch (e) {
+						processing[schedule.id] = false;
 						return;
 					}
+					processing[schedule.id] = false;
 					return;
 				}
 				if (!token) {
@@ -74,6 +85,7 @@ export = async (client: Client) => {
 						console.log(
 							"Failed to fetch user " + schedule.userId + "!"
 						);
+						processing[schedule.id] = false;
 						return;
 					}
 					try {
@@ -81,8 +93,10 @@ export = async (client: Client) => {
 							`You don't have a token linked to the bot! Aborting message!`
 						);
 					} catch (e) {
+						processing[schedule.id] = false;
 						return;
 					}
+					processing[schedule.id] = false;
 					return;
 				}
 				const encryptedToken = token.token;
@@ -102,6 +116,7 @@ export = async (client: Client) => {
 						console.log(
 							"Failed to fetch user " + schedule.userId + "!"
 						);
+						processing[schedule.id] = false;
 						return;
 					}
 					try {
@@ -111,6 +126,7 @@ export = async (client: Client) => {
 							)} to link a valid one!`
 						);
 					} catch (e) {
+						processing[schedule.id] = false;
 						return;
 					}
 
@@ -119,6 +135,7 @@ export = async (client: Client) => {
 							where: { id: schedule.userId }
 						});
 					} catch (e) {
+						processing[schedule.id] = false;
 						return;
 					}
 				}
@@ -127,6 +144,7 @@ export = async (client: Client) => {
 					console.log(
 						"Failed to fetch user " + schedule.userId + "!"
 					);
+					processing[schedule.id] = false;
 					return;
 				}
 
@@ -134,7 +152,9 @@ export = async (client: Client) => {
 					await user.send(
 						`I have sent the message with id \`${schedule.id}\` into <#${schedule.channelId}>!\nYou can view it here: https://discord.com/channels/${schedule.guildId}/${schedule.channelId}/${message.id}`
 					);
+					processing[schedule.id] = false;
 				} catch (e) {
+					processing[schedule.id] = false;
 					return;
 				}
 				// TODO: Make channel groups, to allow people to schedule a message in multiple channels at the same time
