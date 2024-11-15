@@ -7,7 +7,7 @@
 		"test": "npm run build && npm run start",
 		"start": "node dist/index.js",
 		"build": "npx tsc",
-		"refreshprisma": "npx prisma db push",
+		"refreshprisma": "npx prisma db push --skip-generate",
 		"postinstall": "npm run refreshprisma && npm run build"
 	},
 	"keywords": [],
